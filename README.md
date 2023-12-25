@@ -1,20 +1,4 @@
-# todoList-app
-API with go
 
-To test
-{
-  "title": "Read Book",
-  "text": "Finish the novel you started last week.",
-  "category": "Personal",
-  "order": 2
-}
-
-{
-  "title": "Complete Assignment",
-  "text": "Finish the project before the deadline.",
-  "category": "Work",
-  "order": 1
-}
 
 # ToDo List Applciation
 
@@ -80,4 +64,19 @@ The application should now be running locally at http://localhost:8080.
 - **PATCH /complete/:id:** Complete a task. Marks a task as completed.
 
 
+
+## JSON To test
+{
+  "title": "Read Book",
+  "text": "Finish the novel you started last week.",
+  "category": "Personal",
+  "order": 2
+}
+
+{
+  "title": "Complete Assignment",
+  "text": "Finish the project before the deadline.",
+  "category": "Work",
+  "order": 1
+}
 
