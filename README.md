@@ -8,7 +8,6 @@ The **ToDo List Applciation** is a RESTful API developed using Go and the Gin fr
 
 - [Getting Started](#getting-started)
 - [Technologies Used](#technologies-used)
-- [Features](#features)
 - [API Endpoints](#api-endpoints)
 
 ## Getting Started
