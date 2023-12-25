@@ -1,0 +1,20 @@
+# air.toml
+
+# Config file for github.com/cosmtrek/air.
+# Options are:
+# - true/false
+# - environment name
+# - a combination of both
+#
+# Mode = "debug"
+#
+# Build command for the current project.
+#
+[[build]]
+cmd = "go"
+args = ["build", "-o", "tmp/main", "."]
+
+# Restart the running app when `go run` was executed.
+#
+[run]
+go_args = ["run", "."]
