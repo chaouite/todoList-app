@@ -2,7 +2,13 @@ import Task from "./Task";
 function Tasks(props){
 
     return (
-        <Task onOpen={props.onOpen}/>
+        <>
+        {
+            props.tasksData.map((task,index)=>
+                (<Task onOpen={props.onOpen} taskData={task} key={index}/>)
+             )
+        }
+        </>
     );
 }
 export default Tasks;

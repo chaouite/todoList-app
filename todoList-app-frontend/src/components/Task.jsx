@@ -9,14 +9,16 @@ function Task (props){
     }
 
     function onDelete(){
-        //TODO send a delete
+        //TODO send a delete -- Try with the index key
+
     }
     return (
         <div className={classes.task}>
             <div className={classes.description}>
                 {/**TODO get title and text from backend */}
-            <h2>Title</h2>
-            <p>text</p>
+            <h2>{props.taskData.title}</h2>
+            <p>{props.taskData.text}</p>
+            <p style={{'fontStyle': 'italic','color':'#6483bb'}}>Category: {props.taskData.category}</p>
             </div>
             <div className={classes.actions}>
                 <div>
