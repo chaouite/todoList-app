@@ -43,3 +43,10 @@
 .description{
     margin-left: 30px;
 }
+
+.deleteIcon:hover{
+    color: red; 
+}
+.deleteIcon{
+    margin: 10px;
+}
