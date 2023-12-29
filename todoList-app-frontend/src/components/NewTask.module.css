@@ -1,5 +1,35 @@
-.button {
-    padding: 10px 20px;
+.myForm {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+  .myForm label {
+    display: flex;    
+  }
+
+  
+  .myForm input,
+  .myForm textarea,
+  .myForm select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 4px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border-radius: 10px;
+  }
+
+  .myForm textarea {
+    height: 150px; 
+    
+  }
+
+  .myForm button {
+
     font-size: 16px;
     text-align: center;
     text-decoration: none;
@@ -8,12 +38,12 @@
     color: #fff;
     background-color: black;
     border:  #1c4da0;
-    margin: 40px;
-    margin-left: auto;
-    height: 50px
+    height: 50px;
+    margin: 30px;
+    width: 100px;
 }
 
-.button:hover {
+.myForm button:hover {
     border: 2px solid;
     border-color: white;
     background-color: #0e2651;

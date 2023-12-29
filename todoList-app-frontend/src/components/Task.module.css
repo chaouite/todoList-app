@@ -1,9 +1,45 @@
 .task{
     background-color: black;
-    width: 79%;
-    margin-top: 10px;
-    height: 50px;
+    width: 80%;
+    border-radius: 10px;
     display: flex;
-    justify-content: center;
+    padding: 10px;
+    justify-content: space-between
+   
+}
+.iconButton{
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+.updateButton{
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 15px;
+    color: #fff;
+    background-color: #183c7c;
+    border: none;
+    height: 30px;
+    margin: 30px;
+    width: 100px;
+}
+
+.updateButton:hover {
+    border: 2px solid;
+    border-color: white;
+    background-color: #0e2651;
+}
+
+.actions{
+    display: flex;
     align-items: center;
+}
+
+.description{
+    margin-left: 30px;
 }

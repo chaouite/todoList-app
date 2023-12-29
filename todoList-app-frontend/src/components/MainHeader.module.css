@@ -1,5 +1,5 @@
 .main{
-    display: flex;
+    display: block;
     margin: 10%;
     border: 2px solid #000;
     border-top: none;
@@ -8,5 +8,40 @@
     border-left: none;
     width: 80%;
     text-align: center;
-    margin-top: -440px;
+    margin-top: -250px;
+}
+
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 15px;
+    color: #fff;
+    background-color: black;
+    border:  #1c4da0;
+    margin: 40px;
+    margin-left: auto;
+    height: 50px
+}
+
+.button:hover {
+    border: 2px solid;
+    border-color: white;
+    background-color: #0e2651;
+}
+.authIcon{
+    margin-left: 10px;
+}
+.authIcon:hover{
+    color:red;
+}
+.auth{
+display: flex;
+align-items: center;
+}
+
+.mainHead{
+    display: flex;
 }
