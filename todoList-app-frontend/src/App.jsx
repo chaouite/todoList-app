@@ -10,7 +10,15 @@ function App() {
 
   const[isClose, setIsClose] = useState(true); 
   const [tasksData,setTasksData] = useState([]);
-  
+
+  function onOpen(){
+    setIsClose(false);
+  }
+  function onClose(){
+    setIsClose(true);
+  }
+
+  // first reload of the page
   useEffect (()=>{
     async function getTasks(){
       const response = await fetch('http://localhost:8080/tasks');
@@ -20,15 +28,9 @@ function App() {
     getTasks();
   }
   ,[])
-  function onOpen(){
-    setIsClose(false);
-  }
-  function onClose(){
-    setIsClose(true);
-  }
-  function getFormData(data){
-      console.log(data);
 
+  // Add a new Task
+  function addTaskData(data){
       fetch('http://localhost:8080/add',{
         method:'POST',
         body: JSON.stringify({...data, 'order' : 1}),
@@ -36,23 +38,48 @@ function App() {
           'Content-Type': 'application/json'
         }
     })
-    setTasksData([...tasksData, data]);
+    setTasksData((prevTasksData) => [...prevTasksData, data]); 
   }
+
+  // Delete a task based on its id
+  async function onDelete(taskToBeDeleted){
+
+    /**First we need to get the id from the backend because it is generated there
+     * 1- get the tasks table from backend
+     * 2- get the appropriate task 
+     * 3- get its id
+     */
+    const response = await fetch('http://localhost:8080/tasks');
+    const allTasks = await response.json();
+    const task = allTasks["all tasks"].find((task)=>
+     task.title === taskToBeDeleted.title
+     && task.text === taskToBeDeleted.text
+     && task.category === taskToBeDeleted.category)
+    
+    // Delete 
+     fetch(`http://localhost:8080/delete/${task.id}`,
+        {
+            method:'DELETE',
+            headers:  {
+                'Content-Type': 'application/json',
+              }
+        })
+    
+    // Update the state of tasks
+    const newArray = allTasks["all tasks"].filter((myTask) => myTask.id !== task.id);
+    setTasksData(newArray);
+ 
+  }
+
   return (
     <div className='app'>
     <MainHeader onOpen={onOpen}/>
     {!isClose  &&
     <Model>
-      <NewTask onClose={onClose} formData={getFormData}></NewTask>
+      <NewTask onClose={onClose} formData={addTaskData}></NewTask>
     </Model>
     }
-    {/*TODO ***********************
-    **********************
-    **********************
-    **********************
-    get the output data from backend and check if empt of not to tell the user we
-    still need to output the old values */}
-    <Tasks onOpen={onOpen} tasksData={tasksData}/>
+    <Tasks onOpen={onOpen} tasksData={tasksData}  deleteTask={onDelete}/>
     </div>
   );
 }

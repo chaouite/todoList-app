@@ -9,8 +9,7 @@ function Task (props){
     }
 
     function onDelete(){
-        //TODO send a delete -- Try with the index key
-
+        props.onDelete(props.taskData);
     }
     return (
         <div className={classes.task}>

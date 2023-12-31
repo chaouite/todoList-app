@@ -38,7 +38,7 @@ function NewTask(props){
             </p>
             <p>
             <label>Text</label>
-                <textarea type='text' name='title'  ref={textRef}></textarea>
+                <textarea type='text' name='title' required ref={textRef}></textarea>
             </p>
             <p>
             <label>Category </label>
