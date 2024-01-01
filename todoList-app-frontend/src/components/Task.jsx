@@ -1,10 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import classes from './Task.module.css'
 import { SlCheck } from "react-icons/sl";
 import { VscTrash } from "react-icons/vsc";
 function Task (props){
-    const [isCompleted,setIsCompleted]= useState(false);
+   const [isCompleted,setIsCompleted]= useState(false);
+
+   // Checks if the task is done or not in the first render and also after a refresh
+   useEffect(()=>{
+    async function findId(){
+        const response = await fetch(`http://localhost:8080/find/${props.taskData.title}/${props.taskData.text}/${props.taskData.category}`);
+        const idTask = await response.json();
+        const res = await fetch(`http://localhost:8080/${idTask.id}`);
+        const task = await res.json();
+        setIsCompleted(task.task.done);
+    }
+    findId();
+   },[])
     function onComplete(){
+        props.onComplete(props.taskData);
         setIsCompleted(!isCompleted);
     }
 

@@ -11,6 +11,7 @@ function App() {
   const[isClose, setIsClose] = useState(true); 
   const [tasksData,setTasksData] = useState([]);
 
+
   function onOpen(){
     setIsClose(false);
   }
@@ -18,7 +19,7 @@ function App() {
     setIsClose(true);
   }
 
-  // first reload of the page
+  // First reload of the page
   useEffect (()=>{
     async function getTasks(){
       const response = await fetch('http://localhost:8080/tasks');
@@ -48,6 +49,7 @@ function App() {
      * 1- get the tasks table from backend
      * 2- get the appropriate task 
      * 3- get its id
+     * I didn't use "find id Req" because I need the whole array of tasks to update the state of tasks
      */
     const response = await fetch('http://localhost:8080/tasks');
     const allTasks = await response.json();
@@ -70,6 +72,18 @@ function App() {
     setTasksData(newArray);
  
   }
+   async function onComplete(taskTobeCompleted){
+    // Find id of the task to be conpleted
+    const response = await fetch(`http://localhost:8080/find/${taskTobeCompleted.title}/${taskTobeCompleted.text}/${taskTobeCompleted.category}`);
+    const idTask = await response.json();
+
+    // Send the request to complete/uncomplete a task
+    fetch(`http://localhost:8080/complete/${idTask.id}`,{
+        method:'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        }})
+  }
 
   return (
     <div className='app'>
@@ -79,9 +93,11 @@ function App() {
       <NewTask onClose={onClose} formData={addTaskData}></NewTask>
     </Model>
     }
-    <Tasks onOpen={onOpen} tasksData={tasksData}  deleteTask={onDelete}/>
+    <Tasks onOpen={onOpen} tasksData={tasksData}  
+    deleteTask={onDelete} onComplete={onComplete}
+    />
     </div>
   );
 }
 
-export default App
+export default App;

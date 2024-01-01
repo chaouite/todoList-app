@@ -36,8 +36,8 @@ func AddNewTask(c *gin.Context) {
 
 }
 
-// GET - Get a task
-func GetTask(c *gin.Context) {
+// GET - Get a task by ID
+func GetTaskByID(c *gin.Context) {
 	var taskToBefound models.Task
 
 	// Get a task based on the ID retrieved from URL parameters + check for error while retrieving
@@ -47,6 +47,21 @@ func GetTask(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"task": taskToBefound})
+}
+
+// GET - Get Id of a task
+func GetTaskID(c *gin.Context) {
+	var taskToBefound models.Task
+
+	// Get a task based on the ID retrieved from URL parameters + check for error while retrieving
+	if err := models.DB.Where("title=?", c.Param("title"),
+		"text=?", c.Param("text"),
+		"category=?", c.Param("category")).First(&taskToBefound).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error while retrieving": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"id": taskToBefound.ID})
 }
 
 // DELETE - Delete a task
@@ -86,8 +101,8 @@ func UpdateTask(c *gin.Context) {
 
 }
 
-// PATCH - Complete a task
-func CompleteTask(c *gin.Context) {
+// PATCH - Complete/Uncomplete a task
+func CompleteUncompeleTask(c *gin.Context) {
 
 	var taskToBeCompleted models.Task
 
@@ -97,7 +112,7 @@ func CompleteTask(c *gin.Context) {
 		return
 	}
 
-	models.DB.Model(&taskToBeCompleted).Update("done", true)
+	models.DB.Model(&taskToBeCompleted).Update("done", !taskToBeCompleted.Done)
 	c.JSON(http.StatusOK, gin.H{"completed task": taskToBeCompleted})
 
 }

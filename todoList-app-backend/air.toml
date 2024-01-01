@@ -6,8 +6,8 @@
 # - environment name
 # - a combination of both
 #
-# Mode = "debug"
-#
+Mode = "debug"
+
 # Build command for the current project.
 #
 [[build]]
