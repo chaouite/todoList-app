@@ -9,7 +9,8 @@ The **ToDo List Applciation** is a RESTful API developed using Go and the Gin fr
 - [Getting Started](#getting-started)
 - [Technologies Used](#technologies-used)
 - [API Endpoints](#api-endpoints)
-- [Issues with Air](#issues-with-air)
+- [Issues With Air](#issues-with-air)
+- [JSON To Test](#json-to-test)
 
 ## Getting Started
 
@@ -64,23 +65,33 @@ The application should now be running locally at http://localhost:8080.
 
 - **PATCH /complete/:id:** Complete a task. Marks a task as completed.
 
-## Issues with Air
+## Issues With Air
 When sharing code through Git, note that Git doesn't include machine-specific environment variables or local settings. Critical settings like PATH, GOPATH, and GOBIN in a Go development environment aren't automatically transferred. So configure them properly:
 
- ```shell
-      export GOPATH=$HOME/go
+```shell
+# Set up the Go development environment and configure 'air'
 
-   ```shell
-      source ~/.bash_profile
-      export GOBIN=$GOPATH/bin
-      source ~/.bash_profile
-      go get -u github.com/cosmtrek/air
-      export PATH=$PATH:$HOME/go/bin
-      source ~/.bash_profile
-      air
+export GOPATH=$HOME/go
+source ~/.bash_profile
 
+export GOBIN=$GOPATH/bin
+source ~/.bash_profile
+```
+```shell
+# Install 'air' using go get
+go get -u github.com/cosmtrek/air
+```
+```shell
+# Update PATH to include the Go binaries directory
+export PATH=$PATH:$HOME/go/bin
+source ~/.bash_profile
+```
+```shell
+# Start the development server with 'air'
+air
+```
 
-## JSON To test
+## JSON To Test
 {
   "title": "Read Book",
   "text": "Finish the novel you started last week.",
