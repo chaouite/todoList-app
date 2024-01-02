@@ -31,10 +31,13 @@ func main() {
 	// GET - find Id of a task
 	router.GET("/find/:title/:text/:category", controllers.GetTaskID)
 
+	// GET - find all tasks by category
+	router.GET("/findall/:category", controllers.GetTasksByCategory)
+
 	// DELETE - Delete a task
 	router.DELETE("/delete/:id", controllers.DeteleTask)
 
-	// PATCH - Update a task - Change category - Change order
+	// PATCH - Update a task - Change category
 	router.PATCH("/update/:id", controllers.UpdateTask)
 
 	// PATCH - Complete/Uncomplete a task

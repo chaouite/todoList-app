@@ -14,7 +14,8 @@ function Tasks(props){
             tasks.map((task,index)=>
                 (<Task onOpen={props.onOpen} taskData={task} key={index} 
                     onDelete={props.deleteTask}
-                    onComplete={props.onComplete}/>)
+                    onComplete={props.onComplete}
+                    onUpdate={props.onUpdate}/>)
              )
         }
         </>

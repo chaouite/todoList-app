@@ -22,5 +22,4 @@ type UpdateTaskInput struct {
 	Title    string `json:"title"`
 	Text     string `json:"text"`
 	Category string `json:"category"`
-	Order    int    `json:"order"`
 }

@@ -24,6 +24,11 @@ function Task (props){
     function onDelete(){
         props.onDelete(props.taskData);
     }
+
+    function onUpdate(){
+        props.onUpdate(props.taskData);
+        props.onOpen();
+    }
     return (
         <div className={classes.task}>
             <div className={classes.description}>
@@ -34,7 +39,7 @@ function Task (props){
             </div>
             <div className={classes.actions}>
                 <div>
-                    <button type='button' className={classes.updateButton} onClick={props.onOpen}>update</button>
+                    <button type='button' className={classes.updateButton} onClick={onUpdate}>update</button>
                 </div>
                 <div>
                     {isCompleted && <button className={classes.iconButton}  onClick={onComplete}><SlCheck style={{'color': 'green' }} size={24} /></button>}

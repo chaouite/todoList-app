@@ -49,6 +49,18 @@ func GetTaskByID(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"task": taskToBefound})
 }
 
+// GET - Get all tasks of a category
+func GetTasksByCategory(c *gin.Context) {
+	var tasks []models.Task
+
+	if err := models.DB.Where("category=?", c.Param("category")).Find(&tasks).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error while retrieving": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"category tasks": tasks})
+}
+
 // GET - Get Id of a task
 func GetTaskID(c *gin.Context) {
 	var taskToBefound models.Task
@@ -78,7 +90,7 @@ func DeteleTask(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"deleted Task": taskToBeDeleted})
 }
 
-// PATCH - Update a task - Change category - Change order
+// PATCH - Update a task - Change category
 func UpdateTask(c *gin.Context) {
 
 	var taskToBeUpdated models.Task

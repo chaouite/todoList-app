@@ -5,11 +5,19 @@ import MainHeader from './components/MainHeader';
 import Model from './components/Model';
 import NewTask from './components/NewTask';
 import Tasks from './components/Tasks';
+import CategoryFilter from './components/CategoryFilter';
+
 
 function App() {
 
   const[isClose, setIsClose] = useState(true); 
   const [tasksData,setTasksData] = useState([]);
+  const [formData, setFormData] = useState({
+    'title':'',
+    'text': '',
+    'category': ''
+  });
+  const [isUpdating,setIsUpdating] = useState(false);
 
 
   function onOpen(){
@@ -19,27 +27,29 @@ function App() {
     setIsClose(true);
   }
 
+  // Get all tasks
+  async function getTasks(){
+    const response = await fetch('http://localhost:8080/tasks');
+    const allTasks = await response.json();
+    setTasksData(allTasks["all tasks"]);
+  }
+
   // First reload of the page
   useEffect (()=>{
-    async function getTasks(){
-      const response = await fetch('http://localhost:8080/tasks');
-      const allTasks = await response.json();
-      setTasksData(allTasks["all tasks"]);
-    }
     getTasks();
   }
   ,[])
 
   // Add a new Task
-  function addTaskData(data){
+  function addTaskHandler(taskToBeAdded){
       fetch('http://localhost:8080/add',{
         method:'POST',
-        body: JSON.stringify({...data, 'order' : 1}),
+        body: JSON.stringify({...taskToBeAdded, 'order' : 1}),
         headers: {
           'Content-Type': 'application/json'
         }
     })
-    setTasksData((prevTasksData) => [...prevTasksData, data]); 
+    setTasksData((prevTasksData) => [...prevTasksData, taskToBeAdded]); 
   }
 
   // Delete a task based on its id
@@ -73,7 +83,7 @@ function App() {
  
   }
    async function onComplete(taskTobeCompleted){
-    // Find id of the task to be conpleted
+    // Find id of the task to be completed
     const response = await fetch(`http://localhost:8080/find/${taskTobeCompleted.title}/${taskTobeCompleted.text}/${taskTobeCompleted.category}`);
     const idTask = await response.json();
 
@@ -82,19 +92,89 @@ function App() {
         method:'PATCH',
         headers: {
           'Content-Type': 'application/json'
-        }})
+        }
+      })
+  }
+
+  // Get all tasks of a category 
+  async function categoryHandler(category){
+    if(category.toLowerCase() === "work" || category.toLowerCase() === "studies"||category.toLowerCase() === "personal"){
+      const response = await fetch(`http://localhost:8080/findall/${category}`);
+      const tasksOfCategory = await response.json();
+      setTasksData(tasksOfCategory["category tasks"])
+    }
+    else{
+      getTasks();
+    }
+  }
+
+  function onUpdate(taskToBeUpdated){
+    setFormData(taskToBeUpdated);
+    setIsUpdating(true);
+  
+  }
+
+  // Update a task
+  async function updateTaskHandler(newTaskData,taskToBeUpdated){
+    //Find id of the task to be updated
+    const response = await fetch(`http://localhost:8080/find/${taskToBeUpdated.title}/${taskToBeUpdated.text}/${taskToBeUpdated.category}`);
+    const idTask = await response.json();
+
+    // Update
+    fetch(`http://localhost:8080/update/${idTask.id}`,{
+      method:'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newTaskData)
+    })
+
+    // Trigger the re-render and update the state localy
+    const newArary = tasksData.map((task)=>{
+      if (task.title === taskToBeUpdated.title && task.text === taskToBeUpdated.text && task.category === taskToBeUpdated.category) {
+        return {
+          ...task,
+          ...newTaskData
+        };
+      }
+      return task;
+    }
+    )
+    setTasksData(newArary);
+
+ }
+
+  function onAdd(){
+    setIsUpdating(false);
+    setFormData({
+      'title':'',
+      'text': '',
+      'category': ''
+    })
   }
 
   return (
     <div className='app'>
-    <MainHeader onOpen={onOpen}/>
+    <MainHeader onOpen={onOpen} onAdd={onAdd}/>
     {!isClose  &&
     <Model>
-      <NewTask onClose={onClose} formData={addTaskData}></NewTask>
+      <NewTask onClose={onClose}
+       addTaskHandler={addTaskHandler}
+       updateTaskHandler={updateTaskHandler}
+       formData={formData}
+       isUpdating={isUpdating}></NewTask>
     </Model>
     }
+    <CategoryFilter categoryHandler={categoryHandler}/>
+    {tasksData.length === 0 && <p
+    style={{'color': '#0b49ba',
+      'backgroundColor': 'black',
+      'padding': '10px',
+      'borderRadius': '10px'}}
+    >No tasks for now!</p>}
     <Tasks onOpen={onOpen} tasksData={tasksData}  
     deleteTask={onDelete} onComplete={onComplete}
+    onUpdate={onUpdate}
     />
     </div>
   );

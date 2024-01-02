@@ -9,6 +9,7 @@ The **ToDo List Applciation** is a RESTful API developed using Go and the Gin fr
 - [Getting Started](#getting-started)
 - [Technologies Used](#technologies-used)
 - [API Endpoints](#api-endpoints)
+- [Issues with Air](#issues-with-air)
 
 ## Getting Started
 
@@ -62,6 +63,21 @@ The application should now be running locally at http://localhost:8080.
 - **PATCH /update/:id:** Update a task. This endpoint can be used to change the category or order of a task.
 
 - **PATCH /complete/:id:** Complete a task. Marks a task as completed.
+
+## Issues with Air
+When sharing code through Git, note that Git doesn't include machine-specific environment variables or local settings. Critical settings like PATH, GOPATH, and GOBIN in a Go development environment aren't automatically transferred. So configure them properly:
+
+ ```shell
+      export GOPATH=$HOME/go
+
+   ```shell
+      source ~/.bash_profile
+      export GOBIN=$GOPATH/bin
+      source ~/.bash_profile
+      go get -u github.com/cosmtrek/air
+      export PATH=$PATH:$HOME/go/bin
+      source ~/.bash_profile
+      air
 
 
 ## JSON To test
