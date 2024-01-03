@@ -1,6 +1,6 @@
 package models
 
-// Setup the DB
+// Setup the DB and connect to it
 import (
 	"gorm.io/driver/sqlite"
 
@@ -18,8 +18,13 @@ func ConnectDatabase() {
 		panic("Failed to connect to database!")
 	}
 
-	// AutoMigrate will create the table if it doesn't exist
-	err = database.AutoMigrate(&Task{})
+	// Connect to a table
+	err = database.AutoMigrate(&Task{}) // AutoMigrate will create the table if it doesn't exist
+	if err != nil {
+		return
+	}
+
+	err = database.AutoMigrate(&User{})
 	if err != nil {
 		return
 	}

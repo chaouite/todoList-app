@@ -1,4 +1,4 @@
-import React, { useEffect,useRef, useState } from 'react';
+import { useEffect,useRef, useState } from 'react';
 import classes from './NewTask.module.css';
 
 function NewTask(props) {
@@ -88,56 +88,3 @@ function NewTask(props) {
 }
 
 export default NewTask;
-
-
-// import React, { useRef, useState } from 'react';
-// import classes from  './NewTask.module.css';
-// function NewTask(props){
-
-//     const [newTaskInput, setNewTaskInput] = useState({
-//         'title':'',
-//         'text': '',
-//         'category': ''
-//     });
-  
-
-//     const titleRef = useRef(props.formData.title);
-//     const textRef = useRef(props.formData.text);
-//     const categoryRef = useRef(props.formData.category);
-//     function formHandler(event){
-//         event.preventDefault();
-//         props.addTaskHandler({
-//             title: titleRef.current.value,
-//             text: textRef.current.value,
-//             category: categoryRef.current.value
-//           });
-
-//         props.onClose();
-//     }
-
-//     return (
-//         <div className={classes.myForm}>
-//         <form onSubmit={formHandler}>
-//             <p>
-//             <label>Title</label> 
-//                 <input type='text' name='title' required ref={titleRef}></input>   
-//             </p>
-//             <p>
-//             <label>Text</label>
-//                 <textarea type='text' name='title' required ref={textRef}></textarea>
-//             </p>
-//             <p>
-//             <label>Category </label>
-//                <select name="option"  ref={categoryRef}>
-//                     <option value="work">Work</option>
-//                     <option value="studies">Studies</option>
-//                     <option value="personal">Personal</option>
-//                 </select>
-//             </p>
-//         <button type="submit">save</button>
-//         <button type="button" onClick={props.onClose}>cancel</button>
-//         </form>
-//         </div>
-//     )
-// }
-// export default NewTask;

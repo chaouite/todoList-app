@@ -1,12 +1,13 @@
-import { useState } from 'react';
 import classes from './MainHeader.module.css'
 import { SlLogout } from "react-icons/sl";
+import { useNavigate } from 'react-router-dom';
 
 function MainHeader (props){
 
+    const navigate = useNavigate();
     //TODO add logout option
     function onLogout(){
-        console.log("hi");
+        navigate("/login")
     }
     function onAdd(){
         props.onAdd();

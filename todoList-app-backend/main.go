@@ -2,6 +2,7 @@ package main
 
 import (
 	"todoList-app/controllers"
+	"todoList-app/middleware"
 	"todoList-app/models"
 
 	"github.com/gin-contrib/cors"
@@ -13,7 +14,7 @@ func main() {
 
 	// Add CORS middleware
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:5173"} // Update with your React app's origin
+	config.AllowOrigins = []string{"http://localhost:5173"} // Frontend port
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "PATCH"}
 	router.Use(cors.New(config))
 
@@ -42,6 +43,21 @@ func main() {
 
 	// PATCH - Complete/Uncomplete a task
 	router.PATCH("/complete/:id", controllers.CompleteUncompeleTask)
+
+	// POST - register a new User => Sign up
+	router.POST("/signup", controllers.SignUp)
+
+	// POST - Login
+	router.POST("/login", controllers.Login)
+
+	// GET - Get all users
+	router.GET("/users", controllers.GetUsers)
+
+	// GET - Get a user based on its ID
+	router.GET("/user/:userId", controllers.GetUser)
+
+	// GET - Validate the request
+	router.GET("/validate", middleware.CheckJWTMiddleware, controllers.Validate)
 
 	router.Run(":8080")
 

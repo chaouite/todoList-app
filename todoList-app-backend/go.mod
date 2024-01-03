@@ -2,6 +2,8 @@ module todoList-app
 
 go 1.21.5
 
+require github.com/golang-jwt/jwt/v4 v4.5.0
+
 require (
 	dario.cat/mergo v1.0.0 // indirect
 	github.com/bep/godartsass v1.2.0 // indirect
@@ -24,6 +26,8 @@ require (
 	github.com/go-playground/validator/v10 v10.16.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/gohugoio/hugo v0.121.1 // indirect
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
