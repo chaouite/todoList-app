@@ -5,7 +5,7 @@ import Model from './components/Model';
 import NewTask from './components/NewTask';
 import Tasks from './components/Tasks';
 import CategoryFilter from './components/CategoryFilter';
-import classes from './MainApp.module.css'
+import classes from './MainApp.module.css';
 
 
 function MainApp() {
@@ -17,8 +17,23 @@ function MainApp() {
     'text': '',
     'category': ''
   });
+  const [username,setUsername] = useState('');
   const [isUpdating,setIsUpdating] = useState(false);
 
+  useEffect(()=>{
+    async function getLoggedInUser(){
+      const response = await fetch('http://localhost:8080/validate',{
+        headers: {
+                  'Content-Type': 'application/json'
+        },
+        credentials : 'include'
+    })
+      const data = await response.json();
+      console.log(data["user"]);
+      setUsername(data["user"].username)
+    }
+    getLoggedInUser()
+  },[])
 
   function onOpen(){
     setIsClose(false);
@@ -155,7 +170,7 @@ function MainApp() {
 
   return (
         <div className={classes.app}>
-          <MainHeader onOpen={onOpen} onAdd={onAdd}/>
+          <MainHeader onOpen={onOpen} onAdd={onAdd} username={username}/>
           {!isClose  &&
           <Model>
             <NewTask onClose={onClose}

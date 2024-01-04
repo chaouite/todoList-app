@@ -16,6 +16,9 @@ func main() {
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"http://localhost:5173"} // Frontend port
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "PATCH"}
+	config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization"}
+	config.ExposeHeaders = []string{"Content-Length"}
+	config.AllowCredentials = true // Ensure this is set to true
 	router.Use(cors.New(config))
 
 	models.ConnectDatabase()
@@ -49,6 +52,9 @@ func main() {
 
 	// POST - Login
 	router.POST("/login", controllers.Login)
+
+	// POST - Logout
+	router.POST("/logout", controllers.Logout)
 
 	// GET - Get all users
 	router.GET("/users", controllers.GetUsers)

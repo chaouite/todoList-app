@@ -37,7 +37,7 @@ func SignUp(c *gin.Context) {
 	user := models.User{Username: userToSignUp.Username, Password: string(hashedPassword)}
 	result := models.DB.Create(&user)
 	if result.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Failed to create user": err.Error()})
+		c.JSON(http.StatusConflict, gin.H{"error": "Username already exists, please choose another one"})
 		return
 	}
 
@@ -56,29 +56,29 @@ func Login(c *gin.Context) {
 	var user models.User
 	// If username is wrong
 	if err := models.DB.Where("username=?", userToBeLoggedIn.Username).First(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Invalid username ": err.Error()})
+		c.JSON(http.StatusConflict, gin.H{"error": "Invalid username"})
 		return
 	}
 	// If username is correct => check the password
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userToBeLoggedIn.Password))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Invalid password": err.Error()})
+		c.JSON(http.StatusConflict, gin.H{"error": "Invalid password"})
 		return
 	}
 
 	// Create the standard MapClaims
 	claims := jwt.MapClaims{
 		"user_id": user.ID,
-		"exp":     time.Now().Add(time.Hour * 1).Unix(), // Token expires in 1 hour
+		"exp":     time.Now().Add(time.Hour * 1).Unix(), // Token expires in one hour
 	}
 	// Generate JWT token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	// Use the secret key to sign the token
+	// Use the secret key to sign the token = using a secret key to generate a digital signature that is included in the token
 	secretKey := []byte(os.Getenv("SECRET"))
 	tokenString, err := token.SignedString(secretKey)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Failed to create the token": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to create the token"})
 		return
 	}
 
@@ -88,10 +88,18 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"token": tokenString})
 
 }
-func Validate(c *gin.Context) {
-	user, _ := c.Get("user")
+func Logout(c *gin.Context) { // To log out we need to delete the cookie
+	// Create a cookie with the same name as the one you want to delete
+	// Set the cookie's MaxAge to a negative value
+	c.SetCookie("Auth", "", -3600, "", "", false, true)
 
-	c.JSON(http.StatusOK, gin.H{"user that is logged in": user})
+	c.JSON(http.StatusOK, gin.H{"message": "cookie deleted successfully"})
+
+}
+func Validate(c *gin.Context) {
+	user, _ := c.Get("user") // User connected = retrieved in CheckJWTMiddleware
+
+	c.JSON(http.StatusOK, gin.H{"user": user})
 }
 func GetUser(c *gin.Context) {
 	var userToBeFound models.User

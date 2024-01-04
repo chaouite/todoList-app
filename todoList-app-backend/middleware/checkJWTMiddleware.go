@@ -11,10 +11,16 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
+/**
+* Main role is to check the valitidy of a user before allowing him
+* to access protected ressources
+* The middleware examines the incoming request,
+* looking for token that identify the user
+ */
 func CheckJWTMiddleware(c *gin.Context) {
 	fmt.Println("Handling JWT check")
 
-	// Retrieve the JWT from the cookie
+	// Check for the cookie in the HTTP request
 	token, err := c.Cookie("Auth")
 	if err != nil || token == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
@@ -23,7 +29,7 @@ func CheckJWTMiddleware(c *gin.Context) {
 	}
 
 	// Parse and validate the JWT
-	claims := jwt.MapClaims{}
+	claims := jwt.MapClaims{} // Extracts the claims from the token
 	secretKey := []byte(os.Getenv("SECRET"))
 	parsedToken, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
 		// Provide the secret key for validation
@@ -50,7 +56,7 @@ func CheckJWTMiddleware(c *gin.Context) {
 		return
 	}
 
-	// Find the user
+	// Find the user with help of claims @user_id
 	var user models.User
 	if err := models.DB.First(&user, claims["user_id"]).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error while retrieving the user": err.Error()})

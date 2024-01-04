@@ -7,6 +7,14 @@ function MainHeader (props){
     const navigate = useNavigate();
     //TODO add logout option
     function onLogout(){
+        fetch('http://localhost:8080/logout',
+        {
+            method:'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            credentials : 'include'
+        })
         navigate("/login")
     }
     function onAdd(){
@@ -16,7 +24,7 @@ function MainHeader (props){
     return (
         <header className={classes.main}>
             <div  className={classes.auth}>
-                <p>Hello Leith!</p>
+                <p>Hello {props.username} !</p>
                 <SlLogout  className={classes.authIcon} onClick={onLogout} />
             </div>
             <div className={classes.mainHead}> 
