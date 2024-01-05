@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 function CategoryFilter(props  ) {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
+  useEffect(() => {
+    setSelectedCategory(props.showAllCategories ? 'all' : selectedCategory);
+  }, [props.showAllCategories]);
+
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
     props.categoryHandler(event.target.value);
+    props.showAll(false)
   };
 
   return (

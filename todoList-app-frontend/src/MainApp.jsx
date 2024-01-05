@@ -1,4 +1,4 @@
-
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
 import MainHeader from './components/MainHeader';
 import Model from './components/Model';
@@ -12,14 +12,19 @@ function MainApp() {
 
   const[isClose, setIsClose] = useState(true); 
   const [tasksData,setTasksData] = useState([]);
+  const [showAllCategories,setShowAllCategories] = useState(false);
+  
   const [formData, setFormData] = useState({
     'title':'',
     'text': '',
     'category': ''
   });
+
+
   const [username,setUsername] = useState('');
   const [isUpdating,setIsUpdating] = useState(false);
 
+  // To show the username - TODO : when refresh the page keep the connection
   useEffect(()=>{
     async function getLoggedInUser(){
       const response = await fetch('http://localhost:8080/validate',{
@@ -29,10 +34,28 @@ function MainApp() {
         credentials : 'include'
     })
       const data = await response.json();
-      console.log(data["user"]);
+      console.log("validating...",data["user"]);
       setUsername(data["user"].username)
     }
     getLoggedInUser()
+  },[])
+
+  // First reload of the page
+  useEffect (()=>{
+    async function getTasks(){
+    if(username && username !== ''){ // to eliminate the HTTP request if username is not set yet
+      // Get all tasks
+        const response = await fetch(`http://localhost:8080/tasks/${username}`);
+        const allTasks = await response.json();
+        setTasksData(allTasks["all tasks"]);
+    }
+    }
+    getTasks();
+  }
+  ,[username])
+
+  useEffect(()=>{
+    
   },[])
 
   function onOpen(){
@@ -42,24 +65,13 @@ function MainApp() {
     setIsClose(true);
   }
 
-  // Get all tasks
-  async function getTasks(){
-    const response = await fetch('http://localhost:8080/tasks');
-    const allTasks = await response.json();
-    setTasksData(allTasks["all tasks"]);
-  }
-
-  // First reload of the page
-  useEffect (()=>{
-    getTasks();
-  }
-  ,[])
 
   // Add a new Task
-  function addTaskHandler(taskToBeAdded){
-      fetch('http://localhost:8080/add',{
+  async function addTaskHandler(taskToBeAdded){
+    
+    fetch('http://localhost:8080/add',{
         method:'POST',
-        body: JSON.stringify({...taskToBeAdded, 'order' : 1}),
+        body: JSON.stringify({...taskToBeAdded}),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -70,13 +82,7 @@ function MainApp() {
   // Delete a task based on its id
   async function onDelete(taskToBeDeleted){
 
-    /**First we need to get the id from the backend because it is generated there
-     * 1- get the tasks table from backend
-     * 2- get the appropriate task 
-     * 3- get its id
-     * I didn't use "find id Req" because I need the whole array of tasks to update the state of tasks
-     */
-    const response = await fetch('http://localhost:8080/tasks');
+    const response = await fetch(`http://localhost:8080/tasks/${username}`);
     const allTasks = await response.json();
     const task = allTasks["all tasks"].find((task)=>
      task.title === taskToBeDeleted.title
@@ -84,19 +90,29 @@ function MainApp() {
      && task.category === taskToBeDeleted.category)
     
     // Delete 
-     fetch(`http://localhost:8080/delete/${task.id}`,
+    const res = await fetch(`http://localhost:8080/delete/${task.id}`,
         {
             method:'DELETE',
             headers:  {
                 'Content-Type': 'application/json',
               }
-        })
-    
+        });
+    // Get the tasks with the new order
+    const newTasks = await res.json();
+
+    /** If I was in a rendering of another category and I deleted fron there
+     * I want the filter radios to be checked to all instead of that specific category
+     */
+    setShowAllCategories(true);
     // Update the state of tasks
-    const newArray = allTasks["all tasks"].filter((myTask) => myTask.id !== task.id);
+    const newArray = newTasks["new tasks"].filter((myTask) => myTask.id !== task.id);
     setTasksData(newArray);
+    // And get the new order
+    // Change older data order
  
   }
+
+  // Mark a task as completed
    async function onComplete(taskTobeCompleted){
     // Find id of the task to be completed
     const response = await fetch(`http://localhost:8080/find/${taskTobeCompleted.title}/${taskTobeCompleted.text}/${taskTobeCompleted.category}`);
@@ -113,20 +129,22 @@ function MainApp() {
 
   // Get all tasks of a category 
   async function categoryHandler(category){
-    if(category.toLowerCase() === "work" || category.toLowerCase() === "studies"||category.toLowerCase() === "personal"){
-      const response = await fetch(`http://localhost:8080/findall/${category}`);
+    if((category.toLowerCase() === "work" || category.toLowerCase() === "studies"||category.toLowerCase() === "personal")
+    ){
+      const response = await fetch(`http://localhost:8080/findall/${category}/${username}`);
       const tasksOfCategory = await response.json();
       setTasksData(tasksOfCategory["category tasks"])
     }
     else{
-      getTasks();
+      const response = await fetch(`http://localhost:8080/tasks/${username}`);
+      const allTasks = await response.json();
+      setTasksData(allTasks["all tasks"]);
     }
   }
 
   function onUpdate(taskToBeUpdated){
     setFormData(taskToBeUpdated);
     setIsUpdating(true);
-  
   }
 
   // Update a task
@@ -168,6 +186,10 @@ function MainApp() {
     })
   }
 
+  function showAll(value){
+    setShowAllCategories(value)
+  }
+
   return (
         <div className={classes.app}>
           <MainHeader onOpen={onOpen} onAdd={onAdd} username={username}/>
@@ -175,12 +197,14 @@ function MainApp() {
           <Model>
             <NewTask onClose={onClose}
             addTaskHandler={addTaskHandler}
+            username ={username}
             updateTaskHandler={updateTaskHandler}
             formData={formData}
             isUpdating={isUpdating}></NewTask>
           </Model>
           }
-          <CategoryFilter categoryHandler={categoryHandler}/>
+          <CategoryFilter categoryHandler={categoryHandler} showAll={showAll}
+          showAllCategories={showAllCategories}/>
           {tasksData.length === 0 && <p
           style={{'color': '#0b49ba',
             'backgroundColor': 'black',
@@ -189,7 +213,7 @@ function MainApp() {
           >No tasks for now!</p>}
           <Tasks onOpen={onOpen} tasksData={tasksData}  
           deleteTask={onDelete} onComplete={onComplete}
-          onUpdate={onUpdate}
+          onUpdate={onUpdate} 
           />
         </div>
   );

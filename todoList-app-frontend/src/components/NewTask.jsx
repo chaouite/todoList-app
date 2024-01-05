@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect,useRef, useState } from 'react';
 import classes from './NewTask.module.css';
 
@@ -12,6 +13,8 @@ function NewTask(props) {
   const textRef = useRef();
   const categoryRef = useRef();
 
+    const [nextOrder,setNextOrder] =useState(0);
+
   // Update the form fields when props.formData changes
   useEffect(() => {
     setNewTaskInput({
@@ -21,6 +24,15 @@ function NewTask(props) {
     });
   }, [props.formData]);
 
+  useEffect(()=>{
+    async function getNextOrder(){
+      const response = await fetch(`http://localhost:8080/nextorder/${props.username}`);
+      const data = await response.json();
+      setNextOrder(data["next order"]);
+    }
+    getNextOrder();
+  },[])
+
   function formHandler(event) {
     event.preventDefault();
     // If I am adding a new task
@@ -29,7 +41,9 @@ function NewTask(props) {
       props.addTaskHandler({
         title: titleRef.current.value,
         text: textRef.current.value,
-        category: categoryRef.current.value
+        category: categoryRef.current.value,
+        taskOrder: nextOrder,
+        creator: props.username
       });
     }
     // If I am updating an old task
@@ -78,10 +92,10 @@ function NewTask(props) {
             <option value="personal">Personal</option>
           </select>
         </p>
-        <button type="submit">save</button>
         <button type="button" onClick={props.onClose}>
           cancel
         </button>
+        <button type="submit">save</button>     
       </form>
     </div>
   );

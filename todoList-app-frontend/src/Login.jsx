@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classes from './components/NewTask.module.css'
-function Login(){
+function Login(props){
 
     const navigate = useNavigate();
     const [loginData,setLoginData] = useState({
@@ -31,6 +31,8 @@ function Login(){
                     alert(data.error);
                   } else{
                 console.log(data["token"])
+
+                props.isLoggedIn();
                 navigate('/')
                 }
             })

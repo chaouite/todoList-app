@@ -18,13 +18,17 @@ func main() {
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "PATCH"}
 	config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization"}
 	config.ExposeHeaders = []string{"Content-Length"}
-	config.AllowCredentials = true // Ensure this is set to true
+	config.AllowCredentials = true
 	router.Use(cors.New(config))
 
 	models.ConnectDatabase()
 
-	// GET - Get all tasks
-	router.GET("/tasks", controllers.GetAllTasks)
+	/******************Task*****************/
+	// GET - Get all tasks for one creator
+	router.GET("/tasks/:creator", controllers.GetAllTasks)
+
+	// GET - Get all tasks -  TODO: delete lated
+	router.GET("/tasks", controllers.GetAllTasksForBackend)
 
 	// POST - Add new task
 	router.POST("/add", controllers.AddNewTask)
@@ -35,8 +39,8 @@ func main() {
 	// GET - find Id of a task
 	router.GET("/find/:title/:text/:category", controllers.GetTaskID)
 
-	// GET - find all tasks by category
-	router.GET("/findall/:category", controllers.GetTasksByCategory)
+	// GET - find all tasks of a user by category
+	router.GET("/findall/:category/:creator", controllers.GetTasksByCategory)
 
 	// DELETE - Delete a task
 	router.DELETE("/delete/:id", controllers.DeteleTask)
@@ -47,6 +51,10 @@ func main() {
 	// PATCH - Complete/Uncomplete a task
 	router.PATCH("/complete/:id", controllers.CompleteUncompeleTask)
 
+	// GET - Get biggest order
+	router.GET("/nextorder/:creator", controllers.GetNextOrder)
+
+	/******************User*****************/
 	// POST - register a new User => Sign up
 	router.POST("/signup", controllers.SignUp)
 
@@ -64,6 +72,9 @@ func main() {
 
 	// GET - Validate the request
 	router.GET("/validate", middleware.CheckJWTMiddleware, controllers.Validate)
+
+	// DELETE - Delete a user
+	router.DELETE("/delete/user/:id", controllers.DeleteUser)
 
 	router.Run(":8080")
 

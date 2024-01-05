@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
 import classes from './Task.module.css'
 import { SlCheck } from "react-icons/sl";
@@ -36,6 +37,7 @@ function Task (props){
             <h2>{props.taskData.title}</h2>
             <p>{props.taskData.text}</p>
             <p style={{'fontStyle': 'italic','color':'#6483bb'}}>Category: {props.taskData.category}</p>
+            <p style={{'fontStyle': 'italic','color':'#6483bb'}}>order: {props.taskData.taskOrder}</p>
             </div>
             <div className={classes.actions}>
                 <div>

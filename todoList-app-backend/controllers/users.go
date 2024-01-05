@@ -116,3 +116,15 @@ func GetUsers(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"all users": users})
 }
+
+// DELETE - delete a user by its id - TODO: might be dev to a soft delete
+func DeleteUser(c *gin.Context) {
+	var userToBeDeleted models.User
+	if err := models.DB.Where("id=?", c.Param("id")).First(&userToBeDeleted).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "while retrieving"})
+		return
+	}
+	models.DB.Delete(&userToBeDeleted)
+
+	c.JSON(http.StatusOK, gin.H{"deleted user": userToBeDeleted})
+}

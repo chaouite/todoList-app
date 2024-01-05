@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState,useEffect } from "react";
 import Task from "./Task";
 function Tasks(props){
@@ -5,7 +6,7 @@ function Tasks(props){
     const [tasks,setTasks] = useState([]);
 
     useEffect(() => {
-        setTasks(props.tasksData);
+        setTasks(() => [...props.tasksData]);
       }, [props.tasksData]);
 
     return (
