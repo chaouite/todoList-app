@@ -54,6 +54,9 @@ func main() {
 	// GET - Get biggest order
 	router.GET("/nextorder/:creator", controllers.GetNextOrder)
 
+	// GET - Swap
+	router.GET("/swap/:orderFirst/:orderSecond", controllers.GetTasksAfterSwap)
+
 	/******************User*****************/
 	// POST - register a new User => Sign up
 	router.POST("/signup", controllers.SignUp)

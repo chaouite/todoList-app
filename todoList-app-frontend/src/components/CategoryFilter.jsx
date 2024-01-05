@@ -11,6 +11,7 @@ function CategoryFilter(props  ) {
     setSelectedCategory(event.target.value);
     props.categoryHandler(event.target.value);
     props.showAll(false)
+    props.getSelectedCategory(event.target.value);
   };
 
   return (

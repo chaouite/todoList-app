@@ -6,6 +6,7 @@ import NewTask from './components/NewTask';
 import Tasks from './components/Tasks';
 import CategoryFilter from './components/CategoryFilter';
 import classes from './MainApp.module.css';
+import Swap from './components/Swap';
 
 
 function MainApp() {
@@ -13,7 +14,10 @@ function MainApp() {
   const[isClose, setIsClose] = useState(true); 
   const [tasksData,setTasksData] = useState([]);
   const [showAllCategories,setShowAllCategories] = useState(false);
-  
+  const [first,setFirst] = useState(1);
+  const [second,setSecond] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+
   const [formData, setFormData] = useState({
     'title':'',
     'text': '',
@@ -54,17 +58,12 @@ function MainApp() {
   }
   ,[username])
 
-  useEffect(()=>{
-    
-  },[])
-
   function onOpen(){
     setIsClose(false);
   }
   function onClose(){
     setIsClose(true);
   }
-
 
   // Add a new Task
   async function addTaskHandler(taskToBeAdded){
@@ -106,10 +105,7 @@ function MainApp() {
     setShowAllCategories(true);
     // Update the state of tasks
     const newArray = newTasks["new tasks"].filter((myTask) => myTask.id !== task.id);
-    setTasksData(newArray);
-    // And get the new order
-    // Change older data order
- 
+    setTasksData(newArray); 
   }
 
   // Mark a task as completed
@@ -190,6 +186,26 @@ function MainApp() {
     setShowAllCategories(value)
   }
 
+  // Set the orders to swap based on what user chooses
+  async function ordersToSwap(firstOrder,secondOrder){
+    setFirst(firstOrder)
+    setSecond(secondOrder)
+    const response = await fetch(`http://localhost:8080/swap/${firstOrder}/${secondOrder}`)
+    const data = await response.json();
+    setTasksData(data["tasks"])
+  }
+
+
+  // Log
+  useEffect(()=>{
+    console.log("first is ", first);
+    console.log("second is ", second);
+  },[first,second])
+
+  function getSelectedCategory(category){
+    setSelectedCategory(category);
+  }
+
   return (
         <div className={classes.app}>
           <MainHeader onOpen={onOpen} onAdd={onAdd} username={username}/>
@@ -204,13 +220,19 @@ function MainApp() {
           </Model>
           }
           <CategoryFilter categoryHandler={categoryHandler} showAll={showAll}
-          showAllCategories={showAllCategories}/>
+          showAllCategories={showAllCategories}
+          getSelectedCategory={getSelectedCategory}
+          />
+          {(selectedCategory === 'all') &&
+              <Swap numberOfOrders={tasksData.length} ordersToSwap ={ordersToSwap}></Swap>  
+          }         
           {tasksData.length === 0 && <p
           style={{'color': '#0b49ba',
             'backgroundColor': 'black',
             'padding': '10px',
             'borderRadius': '10px'}}
           >No tasks for now!</p>}
+
           <Tasks onOpen={onOpen} tasksData={tasksData}  
           deleteTask={onDelete} onComplete={onComplete}
           onUpdate={onUpdate} 

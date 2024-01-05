@@ -116,6 +116,7 @@ func DeteleTask(c *gin.Context) {
 	// Fetch all tasks again
 	var tasks []models.Task
 	models.DB.Where("creator = ?", taskToBeDeleted.Creator).Find(&tasks)
+	// Update the orders based on the task's placement
 	for i := 0; i < len(tasks); i++ {
 		models.DB.Model(&tasks[i]).Update("TaskOrder", i+1)
 	}
@@ -163,7 +164,8 @@ func CompleteUncompeleTask(c *gin.Context) {
 
 }
 
-// outsider TODO
+/*------------------ORDER OF TASK------------------------*/
+// GET - Get the next order for created Task
 func GetNextOrder(c *gin.Context) {
 	var tasks []models.Task
 
@@ -173,6 +175,46 @@ func GetNextOrder(c *gin.Context) {
 
 }
 
-func RestOrder() {
+// GET - swap
+func GetTasksAfterSwap(c *gin.Context) {
+	// Get tasks we wanna swap
+	var firstTask models.Task
+	var secondTask models.Task
+
+	if err := models.DB.Where("task_order = ?",
+		c.Param("orderFirst")).First(&firstTask).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "while retrieving first task", "details": err.Error()})
+		return
+	}
+	if err := models.DB.Where("task_order = ?",
+		c.Param("orderSecond")).First(&secondTask).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "while retrieving second task"})
+		return
+	}
+
+	// Swap
+	firstTask.TaskOrder, secondTask.TaskOrder = secondTask.TaskOrder, firstTask.TaskOrder
+
+	// Change the places
+	// Update tasks in the database
+	if err := models.DB.Save(&firstTask).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "while updating first task", "details": err.Error()})
+		return
+	}
+
+	if err := models.DB.Save(&secondTask).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "while updating second task", "details": err.Error()})
+		return
+	}
+
+	// Retrieve all tasks after the swap
+	var tasks []models.Task
+	models.DB.Where("creator = ?", firstTask.Creator).Order("task_order").Find(&tasks)
+
+	// Reorder the tasks based on the updated TaskOrder values
+	for i := 0; i < len(tasks); i++ {
+		models.DB.Model(&tasks[i]).Update("TaskOrder", i+1)
+	}
+	c.JSON(http.StatusOK, gin.H{"tasks": tasks})
 
 }
