@@ -1,6 +1,4 @@
-# ToDo List Applciation
-
-The **ToDo List Applciation** is a RESTful API developed using Go and the Gin framework. It provides a set of endpoints for seamless CRUD operations on tasks, allowing users to efficiently manage their to-do lists. In addition to these core functionalities, the application also incorporates various unique [Features](#features) that enhance the user experience and provide additional value. 
+# ToDo List Applciation - Backend
 
 ## Table of Contents
 
