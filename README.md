@@ -12,5 +12,5 @@ The frontend is using Vite and runs on http://localhost:5173/. By leveraging com
 
 ## Overview of the app: 
 ### Welcome page
-![Welcome page]([https://github.com/[username]/[reponame]/blob/[branch]/image.jpg](https://github.com/chaouite/todoList-app/blob/main/todoList-app-frontend/images/welcome_page.png?raw=true)
+![Welcome page](https://github.com/chaouite/todoList-app/blob/main/todoList-app-frontend/images/welcome_page.png)
 
