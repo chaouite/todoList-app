@@ -107,7 +107,7 @@ type User struct {
 
    - ***GetTasksByCategory***:</u> GET - Get all a user's tasks of a category
      ```http
-      /findall/:category/:creator
+     /findall/:category/:creator
      ```
 
    - ***GetAllTasksForBackend***:</u> GET - Get all tasks, for testing purposes => /tasks.
@@ -123,12 +123,12 @@ type User struct {
 
    - ***DeleteTask:*** DELETE - Delete a task and reset the order of the remaining tasks based on their index
      ```http
-      /delete/:id
+     /delete/:id
      ```
 
    - ***UpdateTask:*** PATCH - Update a task's data
      ```http
-      /update/:id
+     /update/:id
      ```
 
    - ***CompleteUncompeleTask:*** PATCH - Mark a task as completed or uncompleted
