@@ -68,19 +68,6 @@ air
 - [JWT](github.com/golang-jwt/jwt)
 - [bcrypt](https://pkg.go.dev/golang.org/x/crypto/bcrypt)
 
-## API Endpoints
-
-- **GET /tasks:** Retrieve all tasks.
-
-- **POST /add:** Add a new task.
-
-- **GET /:id:** Find a task by its ID.
-
-- **DELETE /delete/:id:** Delete a task by its ID.
-
-- **PATCH /update/:id:** Update a task. This endpoint can be used to change the category or order of a task.
-
-- **PATCH /complete/:id:** Complete a task. Marks a task as completed.
 
 ## Main Files
 
@@ -113,41 +100,88 @@ type User struct {
 - **setup.go**: Sets up the SQLite database and provides a function to connect to it.
 
 - **tasks.go**: Contains functions that handle requests to manage the Task struct:
-   - <u>GetAllTasks:</u> GET - Get all tasks of a specific user
-   _API-Endpoints:_ /tasks/:creator.
+   - ***GetAllTasks***: GET - Get all tasks of a specific user 
+      ```http
+      /tasks/:creator
+      ```
 
-   - <u>GetTasksByCategory:</u> GET - Get all a user's tasks of a category => /findall/:category/:creator.
+   - ***GetTasksByCategory***:</u> GET - Get all a user's tasks of a category
+     ```http
+      /findall/:category/:creator
+     ```
 
-   - <u>GetAllTasksForBackend:</u> GET - Get all tasks, for testing purposes => /tasks.
-   - <u>GetTaskByID:</u> GET - Get a task by ID => /:id.
+   - ***GetAllTasksForBackend***:</u> GET - Get all tasks, for testing purposes => /tasks.
+   - ***GetTaskByID***: GET - Get a task by ID
+     ```http
+     /:id
+     ```
 
-   - <u>AddNewTask:</u> POST - Add a new task => /add.
+   - ***AddNewTask:*** POST - Add a new task 
+      ```http
+      /add
+      ```
 
-   - <u>DeleteTask:</u> DELETE - Delete a task and reset the order of the remaining tasks based on their index => /delete/:id.
+   - ***DeleteTask:*** DELETE - Delete a task and reset the order of the remaining tasks based on their index
+     ```http
+      /delete/:id
+     ```
 
-   - <u>UpdateTask:</u> PATCH - Update a task's data => /update/:id.
+   - ***UpdateTask:*** PATCH - Update a task's data
+     ```http
+      /update/:id
+     ```
 
-   - <u>CompleteUncompeleTask:</u> PATCH - Mark a task as completed or uncompleted => /complete/:id.
+   - ***CompleteUncompeleTask:*** PATCH - Mark a task as completed or uncompleted
+      ```http
+      /complete/:id
+      ```
 
-   - <u>GetNextOrder:</u> GET - Get the next order for a Task to be created next => /nextorder/:creator.
+   - ***GetNextOrder:*** GET - Get the next order for a Task to be created next
+      ```http
+      /nextorder/:creator
+      ```
 
-   - <u>GetTasksAfterSwap:</u> GET - Get the tasks in the new order after the swapping => /swap/:orderFirst/:orderSecond.
+   - ***GetTasksAfterSwap:*** GET - Get the tasks in the new order after the swapping
+      ```http
+      /swap/:orderFirst/:orderSecond
+      ```
 
 - **users.go**: Includes functions collectively providing functionality for user registration, login, logout, validation, and user data retrieval and deletion.
-   - <u>hashPassword:</u> Uses bcrypt to hash the password and returns the hashed password as a string.
+   - ***hashPassword:*** Uses bcrypt to hash the password and returns the hashed password as a string.
 
-   - <u>SignUp:</u> POST - Handles the sign-up request, hashes the password and creates a new user in the database => /signup.
+   - ***SignUp:*** POST - Handles the sign-up request, hashes the password and creates a new user in the database
+      ```http
+      /signup
+      ```
 
-   - <u>Login:</u> POST - Manages user login functionality, validates the username, checks the password and issues a JWT token on successful login. Sets the JWT token as a cookie in the response => /login.
+   - ***Login:*** POST - Manages user login functionality, validates the username, checks the password and issues a JWT token on successful login. Sets the JWT token as a cookie in the response
+      ```http
+      /login
+      ```
 
-   - <u>Logout:</u> POST - Deletes the authentication cookie to log the user out by setting the max age to a negative value => /logout.
+   - ***Logout:*** POST - Deletes the authentication cookie to log the user out by setting the max age to a negative value
+      ```http
+      /logout
+   ```
 
-   - <u>Validate:</u> GET - This function validates user information by retrieving data stored in the context. Before execution, the CheckJWTMiddleware, a middleware function, is invoked. This middleware examines the incoming request, checks for the presence of a cookie in the HTTP request, parses and validates the token, and verifies its expiration date. Subsequently, the middleware attaches the user to the request, enabling the program to execute the Validate function effectively.=> /validate.
+   - ***Validate:*** GET - This function validates user information by retrieving data stored in the context. Before execution, the CheckJWTMiddleware, a middleware function, is invoked. This middleware examines the incoming request, checks for the presence of a cookie in the HTTP request, parses and validates the token, and verifies its expiration date. Subsequently, the middleware attaches the user to the request, enabling the program to execute the Validate function effectively.
+      ```http
+      /validate
+      ```
 
-   - <u>GetUser:</u> GET - Gets a user by their ID from the database => /user/:userId.
+   - ***GetUser:*** GET - Gets a user by their ID from the database
+      ```http
+      /user/:userId
+      ```
 
-   - <u>GetUsers:</u> GET - Gets all users from the database => /users.
+   - ***GetUsers:*** GET - Gets all users from the database
+      ```http
+      /users
+      ```
 
-   - <u>DeleteUser:</u> DELETE - Deletes a user by their ID from the database => /delete/user/:id.
+   - ***DeleteUser:*** DELETE - Deletes a user by their ID from the database
+      ```http
+      /delete/user/:id
+      ```
 
 
