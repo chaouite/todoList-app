@@ -14,3 +14,18 @@ The frontend is using Vite and runs on http://localhost:5173/. By leveraging com
 ### Welcome page
 ![Welcome page](https://github.com/chaouite/todoList-app/blob/main/todoList-app-frontend/images/welcome_page.png)
 
+### Sign up page
+![Sign up page](https://github.com/chaouite/todoList-app/blob/main/todoList-app-frontend/images/signup.png)
+
+### Login page
+![Login page](https://github.com/chaouite/todoList-app/blob/main/todoList-app-frontend/images/login_page.png)
+
+### Main app page
+![Main app page](https://github.com/chaouite/todoList-app/blob/main/todoList-app-frontend/images/main_app.png)
+
+### Add task form
+![Add task form](https://github.com/chaouite/todoList-app/blob/main/todoList-app-frontend/images/form_add_task.png)
+
+### Main app page with tasks
+![Main app page with tasks](https://github.com/chaouite/todoList-app/blob/main/todoList-app-frontend/images/main_app_with_tasks.png)
+
