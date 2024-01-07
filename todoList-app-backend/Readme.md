@@ -164,7 +164,7 @@ type User struct {
       /logout
    ```
 
-   - ***Validate:*** GET - This function validates user information by retrieving data stored in the context. Before execution, the CheckJWTMiddleware, a middleware function, is invoked. This middleware examines the incoming request, checks for the presence of a cookie in the HTTP request, parses and validates the token, and verifies its expiration date. Subsequently, the middleware attaches the user to the request, enabling the program to execute the Validate function effectively.
+- ***Validate:*** GET - This function validates user information by retrieving data stored in the context. Before execution, the CheckJWTMiddleware, a middleware function, is invoked. This middleware examines the incoming request, checks for the presence of a cookie in the HTTP request, parses and validates the token, and verifies its expiration date. Subsequently, the middleware attaches the user to the request, enabling the program to execute the Validate function effectively.
       ```http
       /validate
       ```
